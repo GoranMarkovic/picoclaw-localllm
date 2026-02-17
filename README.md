@@ -252,6 +252,42 @@ picoclaw agent -m "What is 2+2?"
 
 That's it! You have a working AI assistant in 2 minutes.
 
+### LM Studio (OpenAI-compatible local server, no API key required)
+
+You can also use [LM Studio](https://lmstudio.ai/) as a local OpenAI-compatible provider.
+
+```json
+{
+  "agents": {
+    "defaults": {
+      "provider": "lmstudio",
+      "model": "openai/gpt-oss-20b"
+    }
+  },
+  "providers": {
+    "lmstudio": {
+      "api_base": "http://host.docker.internal:1234/v1"
+    }
+  }
+}
+```
+
+Notes:
+
+* `provider: "lmstudio"` explicitly selects LM Studio (it is not inferred from model name).
+* `providers.lmstudio.api_key` is optional and can be omitted.
+* In Docker, `host.docker.internal` lets the container reach LM Studio running on your host machine.
+
+Smoke test:
+
+```bash
+# 1) Check models exposed by LM Studio (/v1/models)
+curl http://host.docker.internal:1234/v1/models
+
+# 2) Use one model ID from the output (no API key needed)
+picoclaw agent -m "What is 2+2?"
+```
+
 ---
 
 ## 💬 Chat Apps
