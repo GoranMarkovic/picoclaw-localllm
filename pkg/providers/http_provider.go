@@ -224,12 +224,23 @@ func CreateProvider(cfg *config.Config) (LLMProvider, error) {
 	providerName := strings.ToLower(cfg.Agents.Defaults.Provider)
 
 	var apiKey, apiBase, proxy string
+	requireAPIKey := true
+	useLMStudio := false
 
 	lowerModel := strings.ToLower(model)
 
 	// First, try to use explicitly configured provider
 	if providerName != "" {
 		switch providerName {
+		case "lmstudio":
+			apiKey = cfg.Providers.LMStudio.APIKey
+			apiBase = cfg.Providers.LMStudio.APIBase
+			proxy = cfg.Providers.LMStudio.Proxy
+			requireAPIKey = false
+			useLMStudio = true
+			if apiBase == "" {
+				apiBase = "http://127.0.0.1:1234/v1"
+			}
 		case "groq":
 			if cfg.Providers.Groq.APIKey != "" {
 				apiKey = cfg.Providers.Groq.APIKey
@@ -438,12 +449,16 @@ func CreateProvider(cfg *config.Config) (LLMProvider, error) {
 		}
 	}
 
-	if apiKey == "" && !strings.HasPrefix(model, "bedrock/") {
+	if requireAPIKey && apiKey == "" && !strings.HasPrefix(model, "bedrock/") {
 		return nil, fmt.Errorf("no API key configured for provider (model: %s)", model)
 	}
 
 	if apiBase == "" {
 		return nil, fmt.Errorf("no API base configured for provider (model: %s)", model)
+	}
+
+	if useLMStudio {
+		return NewLMStudioProvider(apiKey, apiBase, proxy), nil
 	}
 
 	return NewHTTPProvider(apiKey, apiBase, proxy), nil

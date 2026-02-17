@@ -169,6 +169,7 @@ type DevicesConfig struct {
 type ProvidersConfig struct {
 	Anthropic     ProviderConfig `json:"anthropic"`
 	OpenAI        ProviderConfig `json:"openai"`
+	LMStudio      ProviderConfig `json:"lmstudio"`
 	OpenRouter    ProviderConfig `json:"openrouter"`
 	Groq          ProviderConfig `json:"groq"`
 	Zhipu         ProviderConfig `json:"zhipu"`
@@ -309,6 +310,7 @@ func DefaultConfig() *Config {
 		Providers: ProvidersConfig{
 			Anthropic:    ProviderConfig{},
 			OpenAI:       ProviderConfig{},
+			LMStudio:     ProviderConfig{},
 			OpenRouter:   ProviderConfig{},
 			Groq:         ProviderConfig{},
 			Zhipu:        ProviderConfig{},

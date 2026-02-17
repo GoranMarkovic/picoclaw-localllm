@@ -86,6 +86,9 @@ func TestDefaultConfig_Providers(t *testing.T) {
 	if cfg.Providers.OpenAI.APIKey != "" {
 		t.Error("OpenAI API key should be empty by default")
 	}
+	if cfg.Providers.LMStudio.APIKey != "" {
+		t.Error("LMStudio API key should be empty by default")
+	}
 	if cfg.Providers.OpenRouter.APIKey != "" {
 		t.Error("OpenRouter API key should be empty by default")
 	}
